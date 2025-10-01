@@ -139,10 +139,3 @@ library(hgu133plus2.db)
 - GSE68801 dataset: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68801
 - Alopecia Areata Foundation: https://aaaf.org.au/
 
-## 👥 Contributing
-
-This project was developed as part of a data science course focusing on bioinformatics and machine learning applications in medical research.
-
-## 📄 License
-
-This project is for educational and research purposes. Please cite appropriately if used in academic work.
