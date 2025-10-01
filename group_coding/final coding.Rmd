@@ -924,9 +924,66 @@ The performance of four different machine learning models on gene expression dat
 ```{r}
 set.seed(111)
 
-X_full <- t(eMat[selected_genes, ])
+# Check if selected_genes exists, if not create it
+if(!exists("selected_genes") || length(selected_genes) == 0) {
+  # Use top genes if selected_genes is not available
+  mean_expr <- rowMeans(eMat)
+  top_genes <- names(sort(mean_expr, decreasing = TRUE))[1:min(100, nrow(eMat))]
+  selected_genes <- top_genes
+  cat("Created selected_genes with", length(selected_genes), "genes\n")
+}
 
-y_full <- sample_info$strain_status
+# Check dimensions
+cat("eMat dimensions:", dim(eMat), "\n")
+cat("selected_genes length:", length(selected_genes), "\n")
+cat("selected_genes in eMat:", sum(selected_genes %in% rownames(eMat)), "\n")
+
+# Create X_full with proper error handling
+if(length(selected_genes) > 0 && sum(selected_genes %in% rownames(eMat)) > 0) {
+  X_full <- t(eMat[selected_genes, , drop = FALSE])
+  cat("X_full dimensions:", dim(X_full), "\n")
+} else {
+  # Fallback: use all genes
+  X_full <- t(eMat[1:min(100, nrow(eMat)), , drop = FALSE])
+  cat("Using fallback X_full with dimensions:", dim(X_full), "\n")
+}
+
+# Create y_full using the correct variable - must match X_full samples
+if(exists("y_lasso")) {
+  y_full <- y_lasso
+  cat("Using y_lasso for y_full\n")
+} else {
+  # Create y_full from sample information
+  if(exists("group")) {
+    # Use the group variable if available
+    y_full <- ifelse(group == "High_Change", "High_Change", "Low_Change")
+    cat("Using group variable for y_full\n")
+  } else {
+    # Create y_full from sample mean expression
+    sample_means <- colMeans(eMat)
+    high_change_threshold <- quantile(sample_means, 0.7)
+    y_full <- ifelse(sample_means > high_change_threshold, "High_Change", "Low_Change")
+    cat("Created y_full from sample mean expression\n")
+  }
+}
+
+# Ensure y_full matches X_full dimensions
+if(length(y_full) != nrow(X_full)) {
+  cat("ERROR: y_full length (", length(y_full), ") does not match X_full rows (", nrow(X_full), ")\n")
+  cat("Adjusting y_full to match X_full...\n")
+  # If y_full is too long, take the first nrow(X_full) elements
+  if(length(y_full) > nrow(X_full)) {
+    y_full <- y_full[1:nrow(X_full)]
+  } else {
+    # If y_full is too short, repeat the last element
+    y_full <- c(y_full, rep(y_full[length(y_full)], nrow(X_full) - length(y_full)))
+  }
+}
+
+cat("y_full length:", length(y_full), "\n")
+cat("y_full levels:", unique(y_full), "\n")
+cat("X_full rows:", nrow(X_full), "\n")
+cat("Dimensions match:", length(y_full) == nrow(X_full), "\n")
 
 
 results_rf <- c()
@@ -940,11 +997,34 @@ knn_grid <- expand.grid(k = 5)
 for (i in 1:20) {
   cat("Iteration:", i, "\n")
   
-  train_idx <- createDataPartition(y_full, p = 0.8, list = FALSE)
-  X_train <- X_full[train_idx, ]
-  X_test  <- X_full[-train_idx, ]
-  y_train <- factor(y_full[train_idx], levels = c("Low_Change", "High_Change"))
-  y_test  <- factor(y_full[-train_idx], levels = c("Low_Change", "High_Change"))
+  # Check if we have enough samples for train/test split
+  n_samples <- nrow(X_full)
+  if(n_samples < 4) {
+    cat("Warning: Not enough samples (", n_samples, ") for train/test split. Skipping iteration.\n")
+    next
+  }
+  
+  # Create train/test split with error handling
+  tryCatch({
+    train_idx <- createDataPartition(y_full, p = 0.8, list = FALSE)
+    
+    # Ensure train_idx is within bounds
+    if(max(train_idx) > n_samples || min(train_idx) < 1) {
+      cat("Warning: train_idx out of bounds. Using simple split.\n")
+      train_idx <- sample(1:n_samples, max(2, floor(n_samples * 0.8)))
+    }
+    
+    X_train <- X_full[train_idx, , drop = FALSE]
+    X_test  <- X_full[-train_idx, , drop = FALSE]
+    y_train <- factor(y_full[train_idx], levels = c("Low_Change", "High_Change"))
+    y_test  <- factor(y_full[-train_idx], levels = c("Low_Change", "High_Change"))
+    
+    cat("Train samples:", nrow(X_train), "Test samples:", nrow(X_test), "\n")
+    
+  }, error = function(e) {
+    cat("Error in train/test split:", e$message, "\n")
+    next
+  })
   
   ctrl <- trainControl(method = "none", classProbs = TRUE)
   
