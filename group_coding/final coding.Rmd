@@ -67,6 +67,14 @@ sample_info$strain_status <- ifelse(sample_means > median(sample_means), "High_C
 
 sample_info$strain_status <- factor(sample_info$strain_status, levels = c("Low_Change", "High_Change"))
 
+# Recreate group variable for this chunk
+group_raw <- sample_info$title
+group <- ifelse(grepl("ptc1", group_raw), "ptc1",
+         ifelse(grepl("ptc2", group_raw), "ptc2",
+         ifelse(grepl("ptc3", group_raw), "ptc3",
+         ifelse(grepl("ptc4", group_raw), "ptc4",
+         ifelse(grepl("ptc5", group_raw), "ptc5", "unknown")))))
+
 table(sample_info$strain_status)
 
 # Show sample titles and their classification
@@ -199,8 +207,9 @@ This indicates that in the samples studied, the changes in gene expression tend 
 QQ plots are used to evaluate whether the p-value distribution conforms to theoretical expectations (under the null hypothesis, the p-value should follow a uniform distribution).
 The red dotted line represents the theoretical expectation line (y=x)
 ```{r}
-# Get p-values
+# Get p-values and clean them
 p <- deg_results$P.Value
+p <- p[!is.na(p) & !is.infinite(p) & p > 0 & p <= 1]  # Remove invalid p-values
 
 # Define QQ plot function
 qqplot_pval <- function(p_values) {
