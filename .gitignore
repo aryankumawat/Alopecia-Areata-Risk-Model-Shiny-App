@@ -1,0 +1,4 @@
+*.RData
+*.Rhistory
+*.RDataTmp
+*.Rapp.history
