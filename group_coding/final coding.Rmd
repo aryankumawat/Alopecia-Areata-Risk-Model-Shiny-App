@@ -131,7 +131,24 @@ Select the top 500 most significantly differentially expressed genes
 # Select top genes and prepare data
 top_genes <- rownames(deg_results[order(deg_results$adj.P.Val), ])[1:500]
 eMat <- exprs(gse)  # Ensure eMat is available
-expr_pca <- t(eMat[top_genes, ]) 
+
+# Clean data for PCA - remove genes with infinite or missing values
+expr_subset <- eMat[top_genes, ]
+expr_subset <- expr_subset[complete.cases(expr_subset), ]  # Remove rows with NA
+expr_subset <- expr_subset[!is.infinite(rowSums(expr_subset)), ]  # Remove rows with infinite values
+
+# Check if we have enough genes after cleaning
+if(nrow(expr_subset) < 2) {
+  # If too few genes, use all available genes
+  expr_subset <- eMat[complete.cases(eMat), ]
+  expr_subset <- expr_subset[!is.infinite(rowSums(expr_subset)), ]
+  # Take top genes from cleaned data
+  if(nrow(expr_subset) > 500) {
+    expr_subset <- expr_subset[1:500, ]
+  }
+}
+
+expr_pca <- t(expr_subset) 
 pca_res <- prcomp(expr_pca, scale. = TRUE)
 
 # Create PCA data frame
@@ -218,9 +235,22 @@ y <- sample_info$strain_status
 sig_genes <- rownames(deg_results)[deg_results$adj.P.Val < 0.05 & abs(deg_results$logFC) > 1]
 # Only use genes that exist in the expression matrix
 common_genes <- intersect(sig_genes, rownames(eMat))
-# Remove genes with missing values
+# Remove genes with missing or infinite values
 eMat_clean <- eMat[common_genes, ]
-eMat_clean <- eMat_clean[complete.cases(eMat_clean), ]
+eMat_clean <- eMat_clean[complete.cases(eMat_clean), ]  # Remove rows with NA
+eMat_clean <- eMat_clean[!is.infinite(rowSums(eMat_clean)), ]  # Remove rows with infinite values
+
+# Check if we have enough genes after cleaning
+if(nrow(eMat_clean) < 2) {
+  # If too few genes, use all available genes
+  eMat_clean <- eMat[complete.cases(eMat), ]
+  eMat_clean <- eMat_clean[!is.infinite(rowSums(eMat_clean)), ]
+  # Take top genes from cleaned data
+  if(nrow(eMat_clean) > 100) {
+    eMat_clean <- eMat_clean[1:100, ]
+  }
+}
+
 X <- t(eMat_clean)
 
 set.seed(111)
@@ -267,7 +297,17 @@ The absolute value of the coefficient: It reflects the importance of the gene to
 
 ```{r}
 # Prepare data for machine learning models
-X_lasso <- t(eMat[selected_genes, ])
+# Clean the selected genes data
+eMat_selected <- eMat[selected_genes, ]
+eMat_selected <- eMat_selected[complete.cases(eMat_selected), ]  # Remove rows with NA
+eMat_selected <- eMat_selected[!is.infinite(rowSums(eMat_selected)), ]  # Remove rows with infinite values
+
+# If no genes remain, use the cleaned data from LASSO
+if(nrow(eMat_selected) == 0) {
+  eMat_selected <- eMat_clean
+}
+
+X_lasso <- t(eMat_selected)
 y_lasso <- sample_info$strain_status
 
 ```
