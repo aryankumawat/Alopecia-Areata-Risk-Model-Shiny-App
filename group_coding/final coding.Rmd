@@ -307,12 +307,17 @@ The absolute value of the coefficient: It reflects the importance of the gene to
 ```{r}
 # Prepare data for machine learning models
 # Clean the selected genes data
-eMat_selected <- eMat[selected_genes, ]
-eMat_selected <- eMat_selected[complete.cases(eMat_selected), ]  # Remove rows with NA
-eMat_selected <- eMat_selected[!is.infinite(rowSums(eMat_selected)), ]  # Remove rows with infinite values
-
-# If no genes remain, use the cleaned data from LASSO
-if(nrow(eMat_selected) == 0) {
+if(length(selected_genes) > 0) {
+  eMat_selected <- eMat[selected_genes, , drop = FALSE]  # Ensure matrix format
+  eMat_selected <- eMat_selected[complete.cases(eMat_selected), , drop = FALSE]  # Remove rows with NA
+  eMat_selected <- eMat_selected[!is.infinite(rowSums(eMat_selected)), , drop = FALSE]  # Remove rows with infinite values
+  
+  # If no genes remain, use the cleaned data from LASSO
+  if(nrow(eMat_selected) == 0) {
+    eMat_selected <- eMat_clean
+  }
+} else {
+  # If no selected genes, use the cleaned data from LASSO
   eMat_selected <- eMat_clean
 }
 
