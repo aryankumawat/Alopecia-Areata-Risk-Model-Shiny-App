@@ -646,6 +646,19 @@ Random forest uses MeanDecreaseAccuracy to measure the importance of a gene. Whe
 library(ggplot2)
 library(dplyr)
 
+# Check if variables exist and recreate if needed
+if(!exists("n_features")) {
+  n_features <- ncol(X_lasso)
+  cat("Recreated n_features:", n_features, "\n")
+}
+
+if(!exists("X_lasso")) {
+  cat("Error: X_lasso not found. Please run previous chunks first.\n")
+} else {
+  cat("X_lasso dimensions:", dim(X_lasso), "\n")
+  cat("X_lasso column names:", colnames(X_lasso), "\n")
+}
+
     # Check if we have enough features for importance visualization
     if(n_features < 2) {
       # For single feature, create a simple visualization
@@ -700,6 +713,18 @@ The coefficient symbol indicates the direction of the association between gene e
 Positive coefficient (green) : Increased gene expression is associated with high change classification
 Negative coefficient (red) : Increased gene expression is associated with low change classification
 ```{r}
+# Check if variables exist and recreate if needed
+if(!exists("n_features")) {
+  n_features <- ncol(X_lasso)
+  cat("Recreated n_features for GLMNET:", n_features, "\n")
+}
+
+if(!exists("X_lasso")) {
+  cat("Error: X_lasso not found for GLMNET. Please run previous chunks first.\n")
+} else {
+  cat("X_lasso dimensions for GLMNET:", dim(X_lasso), "\n")
+}
+
     # Check if we have enough features for coefficient visualization
     if(n_features < 2) {
       # For single feature, create a simple visualization
@@ -761,6 +786,18 @@ ggplot(top_glmnet, aes(x = reorder(Gene, Importance), y = Importance, fill = Coe
 
 SVM
 ```{r}
+# Check if variables exist and recreate if needed
+if(!exists("n_features")) {
+  n_features <- ncol(X_lasso)
+  cat("Recreated n_features for SVM:", n_features, "\n")
+}
+
+if(!exists("X_lasso")) {
+  cat("Error: X_lasso not found for SVM. Please run previous chunks first.\n")
+} else {
+  cat("X_lasso dimensions for SVM:", dim(X_lasso), "\n")
+}
+
     # Check if we have enough features for SVM importance visualization
     if(n_features < 2) {
       # For single feature, create a simple visualization
@@ -817,6 +854,18 @@ For nonlinear SVMS (such as those using RBF kernels), the importance is evaluate
 knn
 
 ```{r}
+# Check if variables exist and recreate if needed
+if(!exists("n_features")) {
+  n_features <- ncol(X_lasso)
+  cat("Recreated n_features for kNN:", n_features, "\n")
+}
+
+if(!exists("X_lasso")) {
+  cat("Error: X_lasso not found for kNN. Please run previous chunks first.\n")
+} else {
+  cat("X_lasso dimensions for kNN:", dim(X_lasso), "\n")
+}
+
     # Check if we have enough features for kNN importance visualization
     if(n_features < 2) {
       # For single feature, create a simple visualization
