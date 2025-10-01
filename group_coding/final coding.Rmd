@@ -453,10 +453,10 @@ if(n_features < 2) {
 } else {
   # For multiple features, use GLMNET
   lasso_model <- train(x = X_lasso,
-                       y = y_lasso,
-                       method = "glmnet",
-                       metric = "ROC",
-                       trControl = ctrl,
+                     y = y_lasso,
+                     method = "glmnet",
+                     metric = "ROC",
+                     trControl = ctrl,
                        tuneLength = min(5, cv_folds))  # Reduce tuneLength for small datasets
 }
 
@@ -508,21 +508,21 @@ if(n_features < 2) {
   cat("SVM model trained successfully (single feature)\n")
 } else {
   # For multiple features, use cross-validation
-  svm_model <- train(
+svm_model <- train(
     x = X_lasso,
     y = factor(y_lasso, levels = c("Low_Change", "High_Change")),
-    method = "svmRadial",
-    trControl = trainControl(
-      method = "cv",
+  method = "svmRadial",
+  trControl = trainControl(
+    method = "cv",
       number = cv_folds,
-      classProbs = TRUE,
-      summaryFunction = twoClassSummary,
+    classProbs = TRUE,
+    summaryFunction = twoClassSummary,
       savePredictions = "final",
       allowParallel = FALSE
-    ),
-    metric = "ROC",
+  ),
+  metric = "ROC",
     tuneLength = min(3, cv_folds)
-  )
+)
 }
 
 svm_model
@@ -535,14 +535,14 @@ if(n_features < 2) {
 } else {
   # For multiple features, calculate ROC
   if("High_Change" %in% colnames(svm_model$pred)) {
-    roc_svm <- roc(
-      response = svm_model$pred$obs,
+roc_svm <- roc(
+  response = svm_model$pred$obs,
       predictor = svm_model$pred$High_Change,
       levels = c("Low_Change", "High_Change"),
-      direction = "<"
-    )
-    plot(roc_svm, col = "darkorange", main = "ROC Curve: SVM (Radial)")
-    auc(roc_svm)
+  direction = "<"
+)
+plot(roc_svm, col = "darkorange", main = "ROC Curve: SVM (Radial)")
+auc(roc_svm)
   } else {
     cat("Note: ROC curve not available for this SVM model configuration\n")
   }
@@ -589,21 +589,21 @@ if(n_features < 2) {
   cat("kNN model trained successfully (single feature)\n")
 } else {
   # For multiple features, use cross-validation
-  knn_model <- train(
+knn_model <- train(
     x = X_lasso,
     y = factor(y_lasso, levels = c("Low_Change", "High_Change")),
-    method = "knn",
-    trControl = trainControl(
-      method = "cv",
+  method = "knn",
+  trControl = trainControl(
+    method = "cv",
       number = cv_folds,
-      classProbs = TRUE,
-      summaryFunction = twoClassSummary,
+    classProbs = TRUE,
+    summaryFunction = twoClassSummary,
       savePredictions = "final",
       allowParallel = FALSE
-    ),
-    metric = "ROC",
+  ),
+  metric = "ROC",
     tuneLength = min(5, cv_folds)
-  )
+)
 }
 
 
@@ -617,14 +617,14 @@ if(n_features < 2) {
 } else {
   # For multiple features, calculate ROC
   if("High_Change" %in% colnames(knn_model$pred)) {
-    roc_knn <- roc(
-      response = knn_model$pred$obs,
+roc_knn <- roc(
+  response = knn_model$pred$obs,
       predictor = knn_model$pred$High_Change,
       levels = c("Low_Change", "High_Change"),
-      direction = "<"
-    )
-    plot(roc_knn, col = "darkgreen", main = "ROC Curve: kNN (10-fold CV)")
-    auc(roc_knn)
+  direction = "<"
+)
+plot(roc_knn, col = "darkgreen", main = "ROC Curve: kNN (10-fold CV)")
+auc(roc_knn)
   } else {
     cat("Note: ROC curve not available for this kNN model configuration\n")
   }
@@ -646,45 +646,51 @@ Random forest uses MeanDecreaseAccuracy to measure the importance of a gene. Whe
 library(ggplot2)
 library(dplyr)
 
-# Check if we have enough features for importance visualization
-if(n_features < 2) {
-  # For single feature, create a simple visualization
-  cat("Note: Single feature model - showing basic importance\n")
-  
-  # Create a simple data frame for visualization
-  if(n_features == 1) {
-    gene_name <- colnames(X_lasso)[1]
-    importance_value <- 1.0  # Default importance for single feature
-    
-    top_rf <- data.frame(
-      Gene = gene_name,
-      Overall = importance_value
-    )
-    
-    ggplot(top_rf, aes(x = Gene, y = Overall)) +
-      geom_bar(stat = "identity", fill = "steelblue") +
-      coord_flip() +
-      labs(title = "Important Gene (Random Forest) - Single Feature",
-           x = "Gene", y = "Importance (MeanDecreaseAccuracy)") +
-      theme_minimal()
-  } else {
-    cat("No features available for visualization\n")
-  }
-} else {
+    # Check if we have enough features for importance visualization
+    if(n_features < 2) {
+      # For single feature, create a simple visualization
+      cat("Note: Single feature model - showing basic importance\n")
+
+      # Create a simple data frame for visualization
+      if(n_features == 1) {
+        gene_name <- colnames(X_lasso)[1]
+        importance_value <- 1.0  # Default importance for single feature
+
+        top_rf <- data.frame(
+          Gene = as.character(gene_name),
+          Overall = as.numeric(importance_value),
+          stringsAsFactors = FALSE
+        )
+
+        # Ensure the data frame has the correct structure
+        cat("Data frame structure:\n")
+        print(str(top_rf))
+        cat("Column names:", colnames(top_rf), "\n")
+
+        ggplot(top_rf, aes(x = Gene, y = Overall)) +
+          geom_bar(stat = "identity", fill = "steelblue") +
+          coord_flip() +
+          labs(title = "Important Gene (Random Forest) - Single Feature",
+               x = "Gene", y = "Importance (MeanDecreaseAccuracy)") +
+          theme_minimal()
+      } else {
+        cat("No features available for visualization\n")
+      }
+    } else {
   # For multiple features, use standard importance calculation
-  imp_rf <- varImp(rf_cv_model)$importance
-  imp_rf$Gene <- rownames(imp_rf)
+imp_rf <- varImp(rf_cv_model)$importance
+imp_rf$Gene <- rownames(imp_rf)
 
-  top_rf <- imp_rf %>%
-    arrange(desc(Overall)) %>%
-    slice(1:10)
+top_rf <- imp_rf %>%
+  arrange(desc(Overall)) %>%
+  slice(1:10)
 
-  ggplot(top_rf, aes(x = reorder(Gene, Overall), y = Overall)) +
-    geom_bar(stat = "identity", fill = "steelblue") +
-    coord_flip() +
-    labs(title = "Important Genes (Random Forest)",
-         x = "Gene", y = "Top 10 Importance (MeanDecreaseAccuracy)") +
-    theme_minimal()
+ggplot(top_rf, aes(x = reorder(Gene, Overall), y = Overall)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Important Genes (Random Forest)",
+       x = "Gene", y = "Top 10 Importance (MeanDecreaseAccuracy)") +
+  theme_minimal()
 }
 ```
 
@@ -694,102 +700,114 @@ The coefficient symbol indicates the direction of the association between gene e
 Positive coefficient (green) : Increased gene expression is associated with high change classification
 Negative coefficient (red) : Increased gene expression is associated with low change classification
 ```{r}
-# Check if we have enough features for coefficient visualization
-if(n_features < 2) {
-  # For single feature, create a simple visualization
-  cat("Note: Single feature model - showing basic coefficient\n")
-  
-  if(n_features == 1) {
-    gene_name <- colnames(X_lasso)[1]
-    coefficient_value <- 1.0  # Default coefficient for single feature
-    
-    coef_df <- data.frame(
-      Gene = gene_name,
-      Coefficient = coefficient_value,
-      Importance = abs(coefficient_value)
-    )
-    
-    ggplot(coef_df, aes(x = Gene, y = Importance, fill = Coefficient > 0)) +
-      geom_bar(stat = "identity", show.legend = FALSE) +
-      coord_flip() +
-      scale_fill_manual(values = c("firebrick", "forestgreen")) +
-      labs(title = "Important Gene (GLMNET) - Single Feature",
-           x = "Gene", y = "Importance Score") +
-      theme_minimal()
-  } else {
-    cat("No features available for visualization\n")
-  }
-} else {
+    # Check if we have enough features for coefficient visualization
+    if(n_features < 2) {
+      # For single feature, create a simple visualization
+      cat("Note: Single feature model - showing basic coefficient\n")
+
+      if(n_features == 1) {
+        gene_name <- colnames(X_lasso)[1]
+        coefficient_value <- 1.0  # Default coefficient for single feature
+
+        coef_df <- data.frame(
+          Gene = as.character(gene_name),
+          Coefficient = as.numeric(coefficient_value),
+          Importance = as.numeric(abs(coefficient_value)),
+          stringsAsFactors = FALSE
+        )
+
+        # Ensure the data frame has the correct structure
+        cat("GLMNET data frame structure:\n")
+        print(str(coef_df))
+        cat("Column names:", colnames(coef_df), "\n")
+
+        ggplot(coef_df, aes(x = Gene, y = Importance, fill = Coefficient > 0)) +
+          geom_bar(stat = "identity", show.legend = FALSE) +
+          coord_flip() +
+          scale_fill_manual(values = c("firebrick", "forestgreen")) +
+          labs(title = "Important Gene (GLMNET) - Single Feature",
+               x = "Gene", y = "Importance Score") +
+          theme_minimal()
+      } else {
+        cat("No features available for visualization\n")
+      }
+    } else {
   # For multiple features, use standard coefficient calculation
-  best_lambda <- lasso_model$bestTune$lambda
-  coef_lasso <- coef(lasso_model$finalModel, s = best_lambda)
-  selected <- coef_lasso[coef_lasso[, 1] != 0, , drop = FALSE]
-  selected <- selected[rownames(selected) != "(Intercept)", , drop = FALSE]
+best_lambda <- lasso_model$bestTune$lambda
+coef_lasso <- coef(lasso_model$finalModel, s = best_lambda)
+selected <- coef_lasso[coef_lasso[, 1] != 0, , drop = FALSE]
+selected <- selected[rownames(selected) != "(Intercept)", , drop = FALSE]
 
-  coef_df <- data.frame(
-    Gene = rownames(selected),
-    Coefficient = as.numeric(selected[, 1])
-  )
+coef_df <- data.frame(
+  Gene = rownames(selected),
+  Coefficient = as.numeric(selected[, 1])
+)
 
-  coef_df$Importance <- abs(coef_df$Coefficient)
-  top_glmnet <- coef_df %>%
-    arrange(desc(Importance)) %>%
-    slice(1:10)
+coef_df$Importance <- abs(coef_df$Coefficient)
+top_glmnet <- coef_df %>%
+  arrange(desc(Importance)) %>%
+  slice(1:10)
 
-  ggplot(top_glmnet, aes(x = reorder(Gene, Importance), y = Importance, fill = Coefficient > 0)) +
-    geom_bar(stat = "identity", show.legend = FALSE) +
-    coord_flip() +
-    scale_fill_manual(values = c("firebrick", "forestgreen")) +
-    labs(title = "Important Genes (GLMNET)",
-         x = "Gene", y = "Top 10 Importance Score") +
-    theme_minimal()
+ggplot(top_glmnet, aes(x = reorder(Gene, Importance), y = Importance, fill = Coefficient > 0)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  coord_flip() +
+  scale_fill_manual(values = c("firebrick", "forestgreen")) +
+  labs(title = "Important Genes (GLMNET)",
+       x = "Gene", y = "Top 10 Importance Score") +
+  theme_minimal()
 }
 
 ```
 
 SVM
 ```{r}
-# Check if we have enough features for SVM importance visualization
-if(n_features < 2) {
-  # For single feature, create a simple visualization
-  cat("Note: Single feature model - showing basic SVM importance\n")
-  
-  if(n_features == 1) {
-    gene_name <- colnames(X_lasso)[1]
-    importance_value <- 1.0  # Default importance for single feature
-    
-    top_svm <- data.frame(
-      Gene = gene_name,
-      Importance = importance_value
-    )
-    
-    ggplot(top_svm, aes(x = Gene, y = Importance)) +
-      geom_bar(stat = "identity", fill = "darkorange") +
-      coord_flip() +
-      labs(title = "Important Gene (SVM) - Single Feature",
-           x = "Gene", y = "Importance Score") +
-      theme_minimal()
-  } else {
-    cat("No features available for visualization\n")
-  }
-} else {
+    # Check if we have enough features for SVM importance visualization
+    if(n_features < 2) {
+      # For single feature, create a simple visualization
+      cat("Note: Single feature model - showing basic SVM importance\n")
+
+      if(n_features == 1) {
+        gene_name <- colnames(X_lasso)[1]
+        importance_value <- 1.0  # Default importance for single feature
+
+        top_svm <- data.frame(
+          Gene = as.character(gene_name),
+          Importance = as.numeric(importance_value),
+          stringsAsFactors = FALSE
+        )
+
+        # Ensure the data frame has the correct structure
+        cat("SVM data frame structure:\n")
+        print(str(top_svm))
+        cat("Column names:", colnames(top_svm), "\n")
+
+        ggplot(top_svm, aes(x = Gene, y = Importance)) +
+          geom_bar(stat = "identity", fill = "darkorange") +
+          coord_flip() +
+          labs(title = "Important Gene (SVM) - Single Feature",
+               x = "Gene", y = "Importance Score") +
+          theme_minimal()
+      } else {
+        cat("No features available for visualization\n")
+      }
+    } else {
   # For multiple features, use standard importance calculation
-  imp_svm <- varImp(svm_model)$importance
-  imp_svm$Gene <- rownames(imp_svm)
+imp_svm <- varImp(svm_model)$importance
+imp_svm$Gene <- rownames(imp_svm)
 
-  colname_svm <- colnames(imp_svm)[1]
-  imp_svm$Importance <- imp_svm[[colname_svm]]
+colname_svm <- colnames(imp_svm)[1]
+imp_svm$Importance <- imp_svm[[colname_svm]]
 
-  top_svm <- imp_svm %>%
-    arrange(desc(Importance)) %>%
-    slice(1:10)
+top_svm <- imp_svm %>%
+  arrange(desc(Importance)) %>%
+  slice(1:10)
 
-  ggplot(top_svm, aes(x = reorder(Gene, Importance), y = Importance)) +
-    geom_bar(stat = "identity", fill = "darkorange") +
-    coord_flip() +
-    labs(title = "Important Genes (SVM)",
-         x = "Gene", y = "Top 10 Importance Score") +
-    theme_minimal()
+ggplot(top_svm, aes(x = reorder(Gene, Importance), y = Importance)) +
+  geom_bar(stat = "identity", fill = "darkorange") +
+  coord_flip() +
+  labs(title = "Important Genes (SVM)",
+       x = "Gene", y = "Top 10 Importance Score") +
+  theme_minimal()
 }
 
 ```
@@ -799,47 +817,53 @@ For nonlinear SVMS (such as those using RBF kernels), the importance is evaluate
 knn
 
 ```{r}
-# Check if we have enough features for kNN importance visualization
-if(n_features < 2) {
-  # For single feature, create a simple visualization
-  cat("Note: Single feature model - showing basic kNN importance\n")
-  
-  if(n_features == 1) {
-    gene_name <- colnames(X_lasso)[1]
-    importance_value <- 1.0  # Default importance for single feature
-    
-    top_knn <- data.frame(
-      Gene = gene_name,
-      Importance = importance_value
-    )
-    
-    ggplot(top_knn, aes(x = Gene, y = Importance)) +
-      geom_bar(stat = "identity", fill = "forestgreen") +
-      coord_flip() +
-      labs(title = "Important Gene (kNN) - Single Feature",
-           x = "Gene", y = "Importance Score") +
-      theme_minimal()
-  } else {
-    cat("No features available for visualization\n")
-  }
-} else {
+    # Check if we have enough features for kNN importance visualization
+    if(n_features < 2) {
+      # For single feature, create a simple visualization
+      cat("Note: Single feature model - showing basic kNN importance\n")
+
+      if(n_features == 1) {
+        gene_name <- colnames(X_lasso)[1]
+        importance_value <- 1.0  # Default importance for single feature
+
+        top_knn <- data.frame(
+          Gene = as.character(gene_name),
+          Importance = as.numeric(importance_value),
+          stringsAsFactors = FALSE
+        )
+
+        # Ensure the data frame has the correct structure
+        cat("kNN data frame structure:\n")
+        print(str(top_knn))
+        cat("Column names:", colnames(top_knn), "\n")
+
+        ggplot(top_knn, aes(x = Gene, y = Importance)) +
+          geom_bar(stat = "identity", fill = "forestgreen") +
+          coord_flip() +
+          labs(title = "Important Gene (kNN) - Single Feature",
+               x = "Gene", y = "Importance Score") +
+          theme_minimal()
+      } else {
+        cat("No features available for visualization\n")
+      }
+    } else {
   # For multiple features, use standard importance calculation
-  imp_knn <- varImp(knn_model)$importance
-  imp_knn$Gene <- rownames(imp_knn)
+imp_knn <- varImp(knn_model)$importance
+imp_knn$Gene <- rownames(imp_knn)
 
-  colname_knn <- colnames(imp_knn)[1]
-  imp_knn$Importance <- imp_knn[[colname_knn]]
+colname_knn <- colnames(imp_knn)[1]
+imp_knn$Importance <- imp_knn[[colname_knn]]
 
-  top_knn <- imp_knn %>%
-    arrange(desc(Importance)) %>%
-    slice(1:10)
+top_knn <- imp_knn %>%
+  arrange(desc(Importance)) %>%
+  slice(1:10)
 
-  ggplot(top_knn, aes(x = reorder(Gene, Importance), y = Importance)) +
-    geom_bar(stat = "identity", fill = "forestgreen") +
-    coord_flip() +
-    labs(title = "Top 10 Important Genes (kNN)",
-         x = "Gene", y = "Importance Score") +
-    theme_minimal()
+ggplot(top_knn, aes(x = reorder(Gene, Importance), y = Importance)) +
+  geom_bar(stat = "identity", fill = "forestgreen") +
+  coord_flip() +
+  labs(title = "Top 10 Important Genes (kNN)",
+       x = "Gene", y = "Importance Score") +
+  theme_minimal()
 }
 
 ```
@@ -958,10 +982,10 @@ if(n_features < 2) {
   mse_rf    <- 0.25  # Default for single feature
   qlike_rf  <- 0.5   # Default for single feature
 } else {
-  y_rf <- rf_cv_model$pred$obs
+y_rf <- rf_cv_model$pred$obs
   p_rf <- rf_cv_model$pred$High_Change
-  mse_rf    <- mean((binarize(y_rf) - p_rf)^2, na.rm = TRUE)
-  qlike_rf  <- qlike(y_rf, p_rf)
+mse_rf    <- mean((binarize(y_rf) - p_rf)^2, na.rm = TRUE)
+qlike_rf  <- qlike(y_rf, p_rf)
 }
 
 # GLMNET
@@ -969,10 +993,10 @@ if(n_features < 2) {
   mse_glm   <- 0.25  # Default for single feature
   qlike_glm <- 0.5   # Default for single feature
 } else {
-  y_glm <- lasso_model$pred$obs
+y_glm <- lasso_model$pred$obs
   p_glm <- lasso_model$pred$High_Change
-  mse_glm   <- mean((binarize(y_glm) - p_glm)^2, na.rm = TRUE)
-  qlike_glm <- qlike(y_glm, p_glm)
+mse_glm   <- mean((binarize(y_glm) - p_glm)^2, na.rm = TRUE)
+qlike_glm <- qlike(y_glm, p_glm)
 }
 
 # SVM
@@ -980,10 +1004,10 @@ if(n_features < 2) {
   mse_svm   <- 0.25  # Default for single feature
   qlike_svm <- 0.5   # Default for single feature
 } else {
-  y_svm <- svm_model$pred$obs
+y_svm <- svm_model$pred$obs
   p_svm <- svm_model$pred$High_Change
-  mse_svm   <- mean((binarize(y_svm) - p_svm)^2, na.rm = TRUE)
-  qlike_svm <- qlike(y_svm, p_svm)
+mse_svm   <- mean((binarize(y_svm) - p_svm)^2, na.rm = TRUE)
+qlike_svm <- qlike(y_svm, p_svm)
 }
 
 # kNN
@@ -991,10 +1015,10 @@ if(n_features < 2) {
   mse_knn   <- 0.25  # Default for single feature
   qlike_knn <- 0.5   # Default for single feature
 } else {
-  y_knn <- knn_model$pred$obs
+y_knn <- knn_model$pred$obs
   p_knn <- knn_model$pred$High_Change
-  mse_knn   <- mean((binarize(y_knn) - p_knn)^2, na.rm = TRUE)
-  qlike_knn <- qlike(y_knn, p_knn)
+mse_knn   <- mean((binarize(y_knn) - p_knn)^2, na.rm = TRUE)
+qlike_knn <- qlike(y_knn, p_knn)
 }
 
 metrics_df <- data.frame(
