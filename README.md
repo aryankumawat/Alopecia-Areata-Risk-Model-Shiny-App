@@ -17,13 +17,14 @@ This project analyzes gene expression profiles from scalp skin punch biopsies of
 ## 📁 Repository Structure
 
 ```
-├── Git Final.Rmd              # Complete R Markdown analysis
-├── shiny_app_coding/          # Shiny web application
-│   ├── app.R                  # Main Shiny app file
-│   ├── final_lasso_model.rds  # Trained SVM model
-│   └── X_with_gender_age.rds  # Feature matrix with demographics
-├── .gitignore                 # Git ignore file
-└── README.md                  # This file
+├── Git Final.Rmd                    # Complete R Markdown analysis
+├── Shiny App Sample Input Data.csv  # Sample data for testing the app
+├── shiny_app_coding/                # Shiny web application
+│   ├── app.R                        # Main Shiny app file
+│   ├── final_lasso_model.rds        # Trained SVM model
+│   └── X_with_gender_age.rds        # Feature matrix with demographics
+├── .gitignore                       # Git ignore file
+└── README.md                        # This file
 ```
 
 ## 🔬 Analysis Components
@@ -74,6 +75,25 @@ R -e "library(shiny); runApp('app.R', host='127.0.0.1', port=3838)"
 ```
 
 Then open your browser to: http://127.0.0.1:3838
+
+### Sample Input Data
+A sample CSV file (`Shiny App Sample Input Data.csv`) is provided to help users understand the required data format and test the application:
+
+**File Structure:**
+- **21 Gene Expression Columns**: Probe IDs for the selected genes (e.g., `205758_at`, `241014_at`, etc.)
+- **Gender Column**: `gender` (0 = Female, 1 = Male)
+- **Age Column**: `age` (numeric values)
+
+**How to Use the Sample Data:**
+1. **Individual Testing**: Use any row from the sample file to populate the Shiny app inputs
+2. **Batch Prediction**: Upload the entire sample file to test batch prediction functionality
+3. **Format Reference**: Use this file as a template for your own data
+
+**Sample Data Details:**
+- Contains 100 sample records with realistic gene expression values
+- Values are normalized and scaled appropriately for the model
+- Includes diverse age ranges (26-48 years) and both genders
+- Ready to use for immediate testing of the application
 
 ## 📈 Key Results
 
