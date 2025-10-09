@@ -65,6 +65,28 @@ This project analyzes gene expression profiles from scalp skin punch biopsies of
 - **Educational Content**: Learn about Alopecia Areata
 - **Data Overview**: GSE68801 dataset information
 
+### Screenshots
+
+#### 1. Demographic Information Input
+![Demographic Info](Demographic%20Info.png)
+*Step 1: Users enter basic demographic information (age and gender) or upload a CSV file with sample data.*
+
+#### 2. Gene Expression Input & Prediction
+![Prediction](Prediction.png)
+*Step 2: Users input gene expression levels and receive risk predictions with visual indicators.*
+
+#### 3. Batch Prediction Feature
+![Batch Prediction](Batch%20Prediction%20of%20the%20data.png)
+*Batch prediction allows users to process multiple samples from uploaded CSV files simultaneously.*
+
+#### 4. Data Overview
+![Data Overview](Data%20Overview.png)
+*Comprehensive information about the GSE68801 dataset used for training the model.*
+
+#### 5. Educational Content
+![More info on alopecia](More%20info%20on%20alopecia.png)
+*Educational section providing detailed information about Alopecia Areata, its types, causes, and impact.*
+
 ### How to Run
 ```r
 # Navigate to the shiny app directory
