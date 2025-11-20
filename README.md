@@ -2,11 +2,11 @@
 
 A comprehensive machine learning project for predicting Alopecia Areata risk using gene expression data from the GSE68801 dataset.
 
-## 📊 Project Overview
+## Project Overview
 
 This project analyzes gene expression profiles from scalp skin punch biopsies of patients with Alopecia Areata (AA) and healthy controls to develop a predictive risk model. The analysis includes differential expression analysis, LASSO feature selection, and multiple machine learning algorithms.
 
-## 🧬 Dataset Information
+## Dataset Information
 
 - **Dataset**: GSE68801 (NCBI GEO)
 - **Platform**: Affymetrix Human Genome U133 Plus 2.0 Array
@@ -14,7 +14,7 @@ This project analyzes gene expression profiles from scalp skin punch biopsies of
 - **Genes**: 54,675 gene features analyzed
 - **Source**: Ali Jabbari et al. - Molecular signatures define alopecia areata subtypes
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 ├── Git Final.Rmd                    # Complete R Markdown analysis
@@ -27,7 +27,7 @@ This project analyzes gene expression profiles from scalp skin punch biopsies of
 └── README.md                        # This file
 ```
 
-## 🔬 Analysis Components
+## Analysis Components
 
 ### 1. Exploratory Data Analysis (EDA)
 - Data quality assessment
@@ -56,7 +56,7 @@ This project analyzes gene expression profiles from scalp skin punch biopsies of
 - Accuracy, F1-score, and other metrics
 - Overfitting verification
 
-## 🚀 Shiny Web Application
+## Shiny Web Application
 
 ### Features
 - **Individual Prediction**: Enter age, gender, and gene expression levels
@@ -124,7 +124,7 @@ A sample CSV file (`Shiny App Sample Input Data.csv`) is provided to help users 
 - **Cross-validation**: 10-fold CV with consistent performance
 - **Gene Mapping**: Probe IDs mapped to gene symbols
 
-## 🛠️ Required R Packages
+## Required R Packages
 
 ```r
 # Core analysis packages
@@ -152,7 +152,7 @@ library(AnnotationDbi)
 library(hgu133plus2.db)
 ```
 
-## 📋 Usage Instructions
+## Usage Instructions
 
 ### Running the Analysis
 1. Open `Git Final.Rmd` in RStudio
@@ -167,7 +167,7 @@ library(hgu133plus2.db)
 4. Click "Predict Risk" for results
 5. Use "Batch Prediction" for CSV uploads
 
-## 🔧 Technical Notes
+## Technical Notes
 
 - **Data Processing**: GCRMA normalization
 - **Feature Selection**: LASSO with 10-fold CV
@@ -175,7 +175,7 @@ library(hgu133plus2.db)
 - **Gene Annotation**: hgu133plus2.db for probe-to-gene mapping
 - **Visualization**: ggplot2 with professional themes
 
-## 📚 References
+## References
 
 - Jabbari, A., et al. "Molecular signatures define alopecia areata subtypes and transcriptional biomarkers." *eLife* (2016)
 - GSE68801 dataset: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68801
