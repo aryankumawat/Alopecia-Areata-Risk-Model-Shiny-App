@@ -178,26 +178,6 @@ For production deployment:
 - **Efficient**: Low memory footprint (50-150MB)
 - **Responsive**: Works on all devices
 
-## Cost Comparison
-
-| Platform | R Shiny | Node.js |
-|----------|---------|---------|
-| shinyapps.io | $9-99/mo | - |
-| Heroku | - | Free-$7/mo |
-| Vercel | - | Free-$20/mo |
-| Railway | - | Free-$5/mo |
-
-**Savings: 50-90%**
-
-## Contributing
-
-Contributions welcome! Areas for improvement:
-- Model integration
-- Additional visualizations
-- Database integration
-- User authentication
-- Mobile app version
-
 ## License
 
 MIT License - feel free to use for research, education, or commercial purposes.
@@ -222,16 +202,6 @@ MIT License - feel free to use for research, education, or commercial purposes.
 3. **Deploy** - Choose a platform from [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
 4. **Customize** - Modify styling, add features, etc.
 5. **Scale** - Add database, monitoring, etc.
-
-## Why This Conversion?
-
-**From R Shiny to Node.js:**
-- Better performance and scalability
-- More deployment options
-- Lower hosting costs
-- Standard web technologies
-- Larger developer ecosystem
-- Better mobile support
 
 ## Learn More
 
