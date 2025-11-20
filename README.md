@@ -151,16 +151,19 @@ The current implementation uses a **simplified prediction function** for demonst
 ## Screenshots
 
 ### Demographic Input
-Enter age, gender, or upload CSV data
+![Demographic Info](Demographic%20Info.png)
 
 ### Gene Expression & Prediction
-Input gene expression levels and get instant predictions
+![Prediction](Prediction.png)
 
 ### Batch Prediction
-Process multiple samples from CSV files
+![Batch Prediction](Batch%20Prediction%20of%20the%20data.png)
+
+### Data Overview
+![Data Overview](Data%20Overview.png)
 
 ### Educational Content
-Learn about Alopecia Areata and the dataset
+![More Info on Alopecia](More%20info%20on%20alopecia.png)
 
 ## Security
 
