@@ -1,51 +1,40 @@
 # 🧬 Alopecia Areata Smart Risk Calculator
 
-A modern web application for predicting Alopecia Areata risk using gene expression data and machine learning. Successfully converted from R Shiny to Node.js for better performance, scalability, and deployment options.
+A web application that predicts Alopecia Areata risk using gene expression data and machine learning. This project was originally built in R Shiny and has been converted to Node.js/Express for improved performance and easier deployment.
 
-![Node.js](https://img.shields.io/badge/Node.js-v14+-green)
-![Express](https://img.shields.io/badge/Express-4.18-blue)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+## Getting Started
 
-## Quick Start
+To run this application locally:
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Start the server
 npm start
-
-# 3. Open your browser
-# Navigate to http://localhost:3000
 ```
 
-Or use the startup script:
-```bash
-./start.sh
-```
+Then open your browser and navigate to `http://localhost:3000`
 
 ## Features
 
-- **Individual Prediction** - Enter demographics and gene expression for single predictions
-- **Batch Prediction** - Upload CSV files to process multiple samples at once
-- **Prediction History** - Track and download all your predictions
-- **Educational Content** - Learn about Alopecia Areata and the GSE68801 dataset
-- **Modern UI** - Responsive, mobile-friendly design with professional styling
-- **Easy Deployment** - Deploy to Heroku, Vercel, AWS, and more
+- Individual risk predictions based on demographics and gene expression data
+- Batch processing for multiple samples via CSV upload
+- Prediction history tracking with download capability
+- Educational information about Alopecia Areata and the GSE68801 dataset
+- Responsive design that works on desktop and mobile devices
 
-## What This App Does
+## About
 
-This application predicts the risk of Alopecia Areata (an autoimmune hair loss condition) based on:
-- **Demographics**: Age and gender
-- **Gene Expression**: 21 key genes identified through LASSO feature selection
-- **Machine Learning**: Trained on the GSE68801 dataset (122 samples)
+This application predicts Alopecia Areata risk using:
+- Patient demographics (age and gender)
+- Expression levels of 21 genes identified through LASSO feature selection
+- A machine learning model trained on the GSE68801 dataset (122 samples)
 
 ## Use Cases
 
-1. **Research**: Analyze gene expression patterns in Alopecia Areata
-2. **Clinical**: Assess patient risk based on biomarkers
-3. **Education**: Learn about the molecular basis of the disease
-4. **Development**: Template for similar medical prediction apps
+This tool can be used for:
+- Research into gene expression patterns in Alopecia Areata
+- Clinical assessment of patient risk based on biomarkers
+- Educational purposes to understand the molecular basis of the disease
+- As a template for similar medical prediction applications
 
 ## Project Structure
 
@@ -74,174 +63,59 @@ This application predicts the risk of Alopecia Areata (an autoimmune hair loss c
 
 ## Documentation
 
-- **[GETTING_STARTED.md](GETTING_STARTED.md)** - Quick start guide
-- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Deploy to 7+ platforms
-- **[MODEL_INTEGRATION.md](MODEL_INTEGRATION.md)** - Integrate the R model
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture
-- **[CONVERSION_SUMMARY.md](CONVERSION_SUMMARY.md)** - What changed from R Shiny
+Additional documentation:
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment instructions
+- [MODEL_INTEGRATION.md](MODEL_INTEGRATION.md) - How to integrate the actual R model
 
 ## Deployment
 
-Deploy to your favorite platform in minutes:
-
-### Heroku (Easiest)
-```bash
-heroku create your-app-name
-git push heroku main
-heroku open
-```
-
-### Vercel
-```bash
-vercel
-```
-
-### Railway
-```bash
-railway up
-```
-
-See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed instructions.
+This application can be deployed to various platforms including Heroku, Vercel, Railway, and others. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
 
 ## Testing
 
-Verify your setup:
-```bash
-node test.js
-```
+You can verify your setup by running `node test.js`. Sample data is available in `Alopecia-Areata-Risk-Model-Shiny-App/Shiny App Sample Input Data.csv` with 100 test records.
 
-Test with sample data:
-- Use `Alopecia-Areata-Risk-Model-Shiny-App/Shiny App Sample Input Data.csv`
-- Contains 100 sample records ready for testing
+## Data Format
 
-## Sample Data Format
+CSV files should contain 21 gene expression columns (probe IDs), plus age (0-100) and gender (0=Female, 1=Male) columns.
 
-Your CSV should include:
-- 21 gene expression columns (probe IDs)
-- `age` (numeric, 0-100)
-- `gender` (0 = Female, 1 = Male)
+## Model Details
 
-Example:
-```csv
-205758_at,241014_at,...,age,gender
-5.459,8.209,...,40,0
-5.722,8.598,...,32,1
-```
+The prediction model was trained on the GSE68801 dataset from NCBI GEO, which contains 122 samples (36 controls, 86 patients) from Affymetrix Human Genome U133 Plus 2.0 Array. LASSO regression was used to select 21 predictive genes, and a Support Vector Machine (SVM) was trained using the caret package in R with cross-validation.
 
-## About the Model
+## Note on Model Implementation
 
-**Dataset**: GSE68801 from NCBI GEO
-- 122 samples (36 controls, 86 patients)
-- Affymetrix Human Genome U133 Plus 2.0 Array
-- 21 genes selected via LASSO regression
+The current version uses a simplified prediction function for demonstration purposes. To integrate the actual trained R model, see [MODEL_INTEGRATION.md](MODEL_INTEGRATION.md). The original model files are located in `Alopecia-Areata-Risk-Model-Shiny-App/shiny_app_coding/`.
 
-**Model**: Support Vector Machine (SVM)
-- Trained using caret package in R
-- Cross-validated performance
-- High accuracy and AUC
 
-## Important Note
 
-The current implementation uses a **simplified prediction function** for demonstration. To use the actual trained model:
+## Security Considerations
 
-1. See [MODEL_INTEGRATION.md](MODEL_INTEGRATION.md) for integration options
-2. Recommended: R Plumber API or Python microservice
-3. The original R model is in `Alopecia-Areata-Risk-Model-Shiny-App/shiny_app_coding/`
+For production use, consider enabling HTTPS, adding rate limiting, implementing input validation, using environment variables for sensitive data, and adding authentication as needed.
 
-## Screenshots
 
-### Demographic Input
-Enter age, gender, or upload CSV data
 
-### Gene Expression & Prediction
-Input gene expression levels and get instant predictions
 
-### Batch Prediction
-Process multiple samples from CSV files
-
-### Educational Content
-Learn about Alopecia Areata and the dataset
-
-## Security
-
-For production deployment:
-- Enable HTTPS
-- Add rate limiting
-- Implement input validation
-- Use environment variables for secrets
-- Add authentication if needed
-
-## Performance
-
-- **Fast**: <1 second page load
-- **Scalable**: Handles 100+ concurrent users
-- **Efficient**: Low memory footprint (50-150MB)
-- **Responsive**: Works on all devices
-
-## Cost Comparison
-
-| Platform | R Shiny | Node.js |
-|----------|---------|---------|
-| shinyapps.io | $9-99/mo | - |
-| Heroku | - | Free-$7/mo |
-| Vercel | - | Free-$20/mo |
-| Railway | - | Free-$5/mo |
-
-**Savings: 50-90%**
 
 ## Contributing
 
-Contributions welcome! Areas for improvement:
-- Model integration
-- Additional visualizations
-- Database integration
-- User authentication
-- Mobile app version
+Contributions are welcome. Potential areas for improvement include model integration, additional visualizations, database integration, user authentication, and mobile app development.
 
 ## License
 
-MIT License - feel free to use for research, education, or commercial purposes.
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 
-- Original R Shiny app and model development
-- GSE68801 dataset from Ali Jabbari et al.
-- NCBI GEO database
-- Alopecia Areata Foundation
+Thanks to the contributors of the GSE68801 dataset (Ali Jabbari et al.), NCBI GEO database, and the Alopecia Areata Foundation.
 
-## Support
 
-- Check the documentation files in the repository
-- Run `node test.js` to verify setup
-- Review [GETTING_STARTED.md](GETTING_STARTED.md) for troubleshooting
 
-## Next Steps
 
-1. **Test locally** - Run `npm start` and test all features
-2. **Integrate model** - See [MODEL_INTEGRATION.md](MODEL_INTEGRATION.md)
-3. **Deploy** - Choose a platform from [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
-4. **Customize** - Modify styling, add features, etc.
-5. **Scale** - Add database, monitoring, etc.
 
-## Why This Conversion?
 
-**From R Shiny to Node.js:**
-- Better performance and scalability
-- More deployment options
-- Lower hosting costs
-- Standard web technologies
-- Larger developer ecosystem
-- Better mobile support
 
-## Learn More
+## References
 
-- [Node.js Documentation](https://nodejs.org/docs)
-- [Express.js Guide](https://expressjs.com/guide)
 - [GSE68801 Dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68801)
-- [Alopecia Areata Info](https://aaaf.org.au/about-alopecia-areata/)
-
----
-
-Start with `npm start` and open http://localhost:3000
-
-For questions or issues, check the documentation or open an issue.
+- [Alopecia Areata Information](https://aaaf.org.au/about-alopecia-areata/)
