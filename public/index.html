@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alopecia Areata Smart Risk Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧬 Alopecia Areata Smart Risk Calculator</h1>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="demographic">Step 1: Demographic Info</button>
+            <button class="tab-button" data-tab="genes">Step 2: Gene Expression & Prediction</button>
+            <button class="tab-button" data-tab="batch">Batch Prediction</button>
+            <button class="tab-button" data-tab="data">Data Overview</button>
+            <button class="tab-button" data-tab="about">About Alopecia</button>
+        </div>
+
+        <!-- Tab 1: Demographic Info -->
+        <div id="demographic" class="tab-content active">
+            <div class="well-panel">
+                <h3>Please enter basic information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" min="0" max="100" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender">
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="csv-upload">Or upload CSV (with same column names as model):</label>
+                    <input type="file" id="csv-upload" accept=".csv">
+                </div>
+                <div id="row-selector-container"></div>
+                <div id="csv-status"></div>
+                <button class="btn btn-primary" onclick="goToGenes()">Next: Gene Expression →</button>
+            </div>
+        </div>
+
+        <!-- Tab 2: Gene Expression & Prediction -->
+        <div id="genes" class="tab-content">
+            <div class="two-column">
+                <div class="column">
+                    <h3>Enter Gene Expression Levels</h3>
+                    <p>Default values are set to 1 for demonstration or populated from CSV.</p>
+                    <div id="gene-inputs" class="gene-inputs-container"></div>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="predictRisk()">🔬 Predict Risk</button>
+                        <button class="btn btn-danger" onclick="resetAll()">🔄 Reset All</button>
+                    </div>
+                </div>
+                <div class="column">
+                    <h3>Prediction Result</h3>
+                    <div id="prediction-result" class="prediction-result"></div>
+                    <div id="risk-level" class="risk-level"></div>
+                    <button class="btn btn-download" onclick="downloadHistory()">📥 Download Prediction History</button>
+                    <h4>Prediction History</h4>
+                    <div id="history-table" class="table-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Batch Prediction -->
+        <div id="batch" class="tab-content">
+            <h3>Automatically predict all rows from uploaded CSV</h3>
+            <button class="btn btn-primary" onclick="runBatchPrediction()">Run Batch Prediction</button>
+            <div id="batch-result" class="table-container"></div>
+            <button class="btn btn-download" onclick="downloadBatch()" style="display:none;" id="download-batch-btn">📥 Download Batch Predictions</button>
+        </div>
+
+        <!-- Tab 4: Data Overview -->
+        <div id="data" class="tab-content">
+            <h2>GSE68801 Dataset Overview</h2>
+            <p>This dataset includes gene expression profiles from scalp skin punch biopsies of patients with Alopecia Areata (AA) and healthy controls.</p>
+            
+            <h3>General Information</h3>
+            <ul>
+                <li>Platform: Affymetrix Human Genome U133 Plus 2.0 Array (GPL570)</li>
+                <li>Organism: Homo sapiens (human)</li>
+                <li>Total Samples: 122</li>
+                <li>Sample Type: Scalp skin punch biopsies</li>
+                <li>Data Source: NCBI GEO Database</li>
+            </ul>
+
+            <h3>Sample Grouping</h3>
+            <table>
+                <tr><th>Group</th><th>Sample Count</th><th>Description</th></tr>
+                <tr><td>Normal Controls (NC)</td><td>36</td><td>Scalp skin biopsies from healthy individuals</td></tr>
+                <tr><td>Patchy AA (AAP)</td><td>54</td><td>Includes 28 lesional and 26 non-lesional samples</td></tr>
+                <tr><td>Alopecia Totalis (AT)</td><td>9</td><td>Lesional samples from patients with complete scalp hair loss</td></tr>
+                <tr><td>Alopecia Universalis (AU)</td><td>23</td><td>Lesional samples from patients with complete body hair loss</td></tr>
+            </table>
+
+            <h3>Dataset Link</h3>
+            <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68801" target="_blank">View GSE68801 on NCBI GEO</a>
+        </div>
+
+        <!-- Tab 5: About Alopecia -->
+        <div id="about" class="tab-content">
+            <h2>What is Alopecia Areata?</h2>
+            <p>Alopecia Areata is an autoimmune condition in which the immune system mistakenly attacks the hair follicles, leading to hair loss on the scalp and elsewhere on the body.</p>
+            
+            <h3>Key Characteristics</h3>
+            <ul>
+                <li>Sudden onset: Hair loss can occur rapidly, often in round or oval patches.</li>
+                <li>Unpredictable: Hair may regrow and then fall out again.</li>
+                <li>Non-contagious: It is not caused by infections.</li>
+            </ul>
+
+            <h3>Types of Alopecia Areata</h3>
+            <ul>
+                <li><strong>Patchy Alopecia Areata:</strong> The most common form, with isolated patches of hair loss.</li>
+                <li><strong>Alopecia Totalis:</strong> Complete loss of scalp hair.</li>
+                <li><strong>Alopecia Universalis:</strong> Complete loss of hair on the scalp and body.</li>
+            </ul>
+
+            <p>Learn more from the <a href="https://aaaf.org.au/about-alopecia-areata/" target="_blank">Alopecia Areata Fact Sheet on AAAF</a></p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
