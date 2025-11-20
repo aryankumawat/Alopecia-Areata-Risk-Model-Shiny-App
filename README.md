@@ -117,7 +117,7 @@ A sample CSV file (`Shiny App Sample Input Data.csv`) is provided to help users 
 - Includes diverse age ranges (26-48 years) and both genders
 - Ready to use for immediate testing of the application
 
-## 📈 Key Results
+## Key Results
 
 - **Best Model**: Random Forest (AUC: 0.92)
 - **Selected Features**: 21 genes + age + gender
