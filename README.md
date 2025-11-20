@@ -6,7 +6,7 @@ A modern web application for predicting Alopecia Areata risk using gene expressi
 ![Express](https://img.shields.io/badge/Express-4.18-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # 1. Install dependencies
@@ -24,7 +24,7 @@ Or use the startup script:
 ./start.sh
 ```
 
-## ✨ Features
+## Features
 
 - **Individual Prediction** - Enter demographics and gene expression for single predictions
 - **Batch Prediction** - Upload CSV files to process multiple samples at once
@@ -33,21 +33,21 @@ Or use the startup script:
 - **Modern UI** - Responsive, mobile-friendly design with professional styling
 - **Easy Deployment** - Deploy to Heroku, Vercel, AWS, and more
 
-## 📊 What This App Does
+## What This App Does
 
 This application predicts the risk of Alopecia Areata (an autoimmune hair loss condition) based on:
 - **Demographics**: Age and gender
 - **Gene Expression**: 21 key genes identified through LASSO feature selection
 - **Machine Learning**: Trained on the GSE68801 dataset (122 samples)
 
-## 🎯 Use Cases
+## Use Cases
 
 1. **Research**: Analyze gene expression patterns in Alopecia Areata
 2. **Clinical**: Assess patient risk based on biomarkers
 3. **Education**: Learn about the molecular basis of the disease
 4. **Development**: Template for similar medical prediction apps
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── server.js              # Express server with API endpoints
@@ -60,7 +60,7 @@ This application predicts the risk of Alopecia Areata (an autoimmune hair loss c
 └── docs/                 # Comprehensive documentation
 ```
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 **Backend:**
 - Node.js + Express.js
@@ -72,7 +72,7 @@ This application predicts the risk of Alopecia Areata (an autoimmune hair loss c
 - Vanilla JavaScript
 - Fetch API
 
-## 📖 Documentation
+## Documentation
 
 - **[GETTING_STARTED.md](GETTING_STARTED.md)** - Quick start guide
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Deploy to 7+ platforms
@@ -80,7 +80,7 @@ This application predicts the risk of Alopecia Areata (an autoimmune hair loss c
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture
 - **[CONVERSION_SUMMARY.md](CONVERSION_SUMMARY.md)** - What changed from R Shiny
 
-## 🌐 Deployment
+## Deployment
 
 Deploy to your favorite platform in minutes:
 
@@ -103,7 +103,7 @@ railway up
 
 See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed instructions.
 
-## 🧪 Testing
+## Testing
 
 Verify your setup:
 ```bash
@@ -114,7 +114,7 @@ Test with sample data:
 - Use `Alopecia-Areata-Risk-Model-Shiny-App/Shiny App Sample Input Data.csv`
 - Contains 100 sample records ready for testing
 
-## 📊 Sample Data Format
+## Sample Data Format
 
 Your CSV should include:
 - 21 gene expression columns (probe IDs)
@@ -128,7 +128,7 @@ Example:
 5.722,8.598,...,32,1
 ```
 
-## 🔬 About the Model
+## About the Model
 
 **Dataset**: GSE68801 from NCBI GEO
 - 122 samples (36 controls, 86 patients)
@@ -140,7 +140,7 @@ Example:
 - Cross-validated performance
 - High accuracy and AUC
 
-## ⚠️ Important Note
+## Important Note
 
 The current implementation uses a **simplified prediction function** for demonstration. To use the actual trained model:
 
@@ -148,7 +148,7 @@ The current implementation uses a **simplified prediction function** for demonst
 2. Recommended: R Plumber API or Python microservice
 3. The original R model is in `Alopecia-Areata-Risk-Model-Shiny-App/shiny_app_coding/`
 
-## 🎨 Screenshots
+## Screenshots
 
 ### Demographic Input
 Enter age, gender, or upload CSV data
@@ -162,7 +162,7 @@ Process multiple samples from CSV files
 ### Educational Content
 Learn about Alopecia Areata and the dataset
 
-## 🔐 Security
+## Security
 
 For production deployment:
 - Enable HTTPS
@@ -171,14 +171,14 @@ For production deployment:
 - Use environment variables for secrets
 - Add authentication if needed
 
-## 📈 Performance
+## Performance
 
 - **Fast**: <1 second page load
 - **Scalable**: Handles 100+ concurrent users
 - **Efficient**: Low memory footprint (50-150MB)
 - **Responsive**: Works on all devices
 
-## 💰 Cost Comparison
+## Cost Comparison
 
 | Platform | R Shiny | Node.js |
 |----------|---------|---------|
@@ -189,7 +189,7 @@ For production deployment:
 
 **Savings: 50-90%**
 
-## 🤝 Contributing
+## Contributing
 
 Contributions welcome! Areas for improvement:
 - Model integration
@@ -198,42 +198,42 @@ Contributions welcome! Areas for improvement:
 - User authentication
 - Mobile app version
 
-## 📄 License
+## License
 
 MIT License - feel free to use for research, education, or commercial purposes.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Original R Shiny app and model development
 - GSE68801 dataset from Ali Jabbari et al.
 - NCBI GEO database
 - Alopecia Areata Foundation
 
-## 📞 Support
+## Support
 
 - Check the documentation files in the repository
 - Run `node test.js` to verify setup
 - Review [GETTING_STARTED.md](GETTING_STARTED.md) for troubleshooting
 
-## 🎯 Next Steps
+## Next Steps
 
-1. ✅ **Test locally** - Run `npm start` and test all features
-2. ⏳ **Integrate model** - See [MODEL_INTEGRATION.md](MODEL_INTEGRATION.md)
-3. ⏳ **Deploy** - Choose a platform from [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
-4. ⏳ **Customize** - Modify styling, add features, etc.
-5. ⏳ **Scale** - Add database, monitoring, etc.
+1. **Test locally** - Run `npm start` and test all features
+2. **Integrate model** - See [MODEL_INTEGRATION.md](MODEL_INTEGRATION.md)
+3. **Deploy** - Choose a platform from [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+4. **Customize** - Modify styling, add features, etc.
+5. **Scale** - Add database, monitoring, etc.
 
-## 🌟 Why This Conversion?
+## Why This Conversion?
 
 **From R Shiny to Node.js:**
-- ✅ Better performance and scalability
-- ✅ More deployment options
-- ✅ Lower hosting costs
-- ✅ Standard web technologies
-- ✅ Larger developer ecosystem
-- ✅ Better mobile support
+- Better performance and scalability
+- More deployment options
+- Lower hosting costs
+- Standard web technologies
+- Larger developer ecosystem
+- Better mobile support
 
-## 📚 Learn More
+## Learn More
 
 - [Node.js Documentation](https://nodejs.org/docs)
 - [Express.js Guide](https://expressjs.com/guide)
@@ -241,8 +241,6 @@ MIT License - feel free to use for research, education, or commercial purposes.
 - [Alopecia Areata Info](https://aaaf.org.au/about-alopecia-areata/)
 
 ---
-
-**Ready to launch!** 🚀
 
 Start with `npm start` and open http://localhost:3000
 
