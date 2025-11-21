@@ -217,4 +217,3 @@ MIT License - feel free to use for research, education, or commercial purposes.
 
 Start with `npm start` and open http://localhost:3000
 
-For questions or issues, check the documentation or open an issue.
