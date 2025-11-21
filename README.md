@@ -1,4 +1,4 @@
-# 🧬 Alopecia Areata Smart Risk Calculator
+# Alopecia Areata Smart Risk Calculator
 
 A modern web application for predicting Alopecia Areata risk using gene expression data and machine learning. Successfully converted from R Shiny to Node.js for better performance, scalability, and deployment options.
 
